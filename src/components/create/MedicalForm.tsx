@@ -56,9 +56,9 @@ const CardCriacao: React.FC<CardCriacaoProps> = ({ isOpen, onClose }) => {
                 </button>
                 <h1 className="text-5xl text-[#114238]">FICHA MÉDICA</h1>
               </article>
-           
+
               <button className="text-black" onClick={onClose}>
-                <div    >
+                <div>
                   <div className="bg-[#207865] w-44 h-12 rounded-full flex justify-center items-center text-white text-2xl">
                     Cadastrar
                   </div>

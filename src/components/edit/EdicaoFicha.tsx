@@ -170,14 +170,22 @@ const CardCriacao: React.FC<CardCriacaoProps> = ({
                   </div>
                   <div className="w-1/3 flex flex-col">
                     <label className="text-xl font-normal">Bairro</label>
-                    <input type="text" className="h-14 w-full" content={bairro}/>
+                    <input
+                      type="text"
+                      className="h-14 w-full"
+                      content={bairro}
+                    />
                   </div>
                   <div />
                 </article>
                 <article>
                   <div className="w-full">
                     <label className="text-xl font-normal">Observações</label>
-                    <input type="text" className="h-14 w-full" content={especificacoesAdicionais}/>
+                    <input
+                      type="text"
+                      className="h-14 w-full"
+                      content={especificacoesAdicionais}
+                    />
                   </div>
                 </article>
               </div>

@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { MdClose } from "react-icons/md";
 import { IoMdArrowDropright } from "react-icons/io";
 
-
 interface DrawerProps {
   isOpen: boolean;
   onClose: () => void;
@@ -71,7 +70,10 @@ const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose }) => {
           <div className="overflow-y-auto flex flex-col p-4 gap-12">
             {componentes_drawer.map(componente => {
               return (
-                <li key={componente.nome_apresetacao} className="list-none flex items-center duration-200">
+                <li
+                  key={componente.nome_apresetacao}
+                  className="list-none flex items-center duration-200"
+                >
                   <IoMdArrowDropright size={40} color="white" />
                   <a href={componente.rota}>
                     <p className="text-3xl">

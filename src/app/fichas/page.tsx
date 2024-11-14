@@ -23,42 +23,37 @@ interface Paciente {
 }
 
 const page: React.FC = () => {
-  
   const [prontuarios, setProntuarios] = useState<Paciente[]>([]);
-
 
   useEffect(() => {
     setProntuarios(
       pacientes.filter(registro => registro.tipo === "Ficha Médica")
     );
   }, []);
-  
 
   return (
     <MainLayout nav="Fichas Médica">
       <div className="w-full flex justify-center">
         <div className="grid grid-cols-2 gap-10 justify-items-center">
-          {prontuarios.map(
-            (prontuario) => {
-              return (
-                <Preview
-                  key={prontuario.nome}
-                  tipo={prontuario.tipo}
-                  nome={prontuario.nome}
-                  genero={prontuario.genero}
-                  idade={prontuario.idade}
-                  altura={prontuario.altura}
-                  peso={prontuario.peso}
-                  telefone={prontuario.telefone}
-                  cidade={prontuario.cidade}
-                  bairro={prontuario.bairro}
-                  rua={prontuario.rua}
-                  numero={prontuario.numero}
-                  especificacoesAdicionais={prontuario.especificacoesAdicionais}
-                />
-              );
-            }
-          )}
+          {prontuarios.map(prontuario => {
+            return (
+              <Preview
+                key={prontuario.nome}
+                tipo={prontuario.tipo}
+                nome={prontuario.nome}
+                genero={prontuario.genero}
+                idade={prontuario.idade}
+                altura={prontuario.altura}
+                peso={prontuario.peso}
+                telefone={prontuario.telefone}
+                cidade={prontuario.cidade}
+                bairro={prontuario.bairro}
+                rua={prontuario.rua}
+                numero={prontuario.numero}
+                especificacoesAdicionais={prontuario.especificacoesAdicionais}
+              />
+            );
+          })}
         </div>
       </div>
     </MainLayout>
