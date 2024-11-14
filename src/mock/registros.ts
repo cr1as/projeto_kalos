@@ -253,7 +253,7 @@ const pacientes = [
     genero: "Feminino",
     telefone: "(11) 9876-4321",
     peso: "64.0",
-    altura: "1.75",
+    altura: "1.76",
     especificacoesAdicionais: "Enxaqueca frequente",
     rua: "Rua P",
     numero: "1414",
