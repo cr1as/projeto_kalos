@@ -68,55 +68,55 @@ const CardCriacao: React.FC<CardCriacaoProps> = ({ isOpen, onClose }) => {
             <article className="flex justify-center">
               <div className="w-11/12 flex flex-col ">
                 <article className="flex flex-col">
-                  <label className="text-xl font-normal">Nome</label>
+                  <label className="text-xl font-normal">Nome: </label>
                   <input type="text" className="h-14 w-full" />
                 </article>
                 <article className="flex">
                   <div className="w-1/2 flex flex-col">
-                    <label className="text-xl font-normal">Idade</label>
+                    <label className="text-xl font-normal">Idade: </label>
                     <input type="text" className="h-14 w-11/12" />
                   </div>
                   <div className="w-1/2 flex flex-col">
-                    <label className="text-xl font-normal">Gênero</label>
+                    <label className="text-xl font-normal">Gênero: </label>
                     <input type="text" className="h-14 w-full" />
                   </div>
                 </article>
                 <article className="flex">
                   <div className="flex w-1/2">
                     <div className="w-1/2 flex flex-col">
-                      <label className="text-xl font-normal">Peso</label>
+                      <label className="text-xl font-normal">Peso: </label>
                       <input type="text" className="h-14 w-11/12" />
                     </div>
                     <div className="w-1/2 flex flex-col">
-                      <label className="text-xl font-normal">Altura</label>
+                      <label className="text-xl font-normal">Altura: </label>
                       <input type="text" className="h-14 w-11/12" />
                     </div>
                   </div>
                   <div className="w-1/2 flex flex-col">
-                    <label className="text-xl font-normal">Telefone</label>
+                    <label className="text-xl font-normal">Telefone: </label>
                     <input type="text" className="h-14 w-full" />
                   </div>
                 </article>
                 <article>
-                  <h2 className="text-3xl font-medium my-4">Endereço</h2>
+                  <h2 className="text-3xl font-medium my-4">Endereço: </h2>
                 </article>
                 <article className="flex">
                   <div className="w-3/4 flex flex-col">
-                    <label className="text-xl font-normal">Rua</label>
+                    <label className="text-xl font-normal">Rua: </label>
                     <input type="text" className="h-14 w-11/12" />
                   </div>
                   <div className="w-1/4 flex flex-col">
-                    <label className="text-xl font-normal">Número</label>
+                    <label className="text-xl font-normal">Número: </label>
                     <input type="text" className="h-14 w-full" />
                   </div>
                 </article>
                 <article className="flex">
                   <div className="w-2/3 flex flex-col">
-                    <label className="text-xl font-normal">Cidade</label>
+                    <label className="text-xl font-normal">Cidade:</label>
                     <input type="text" className="h-14 w-11/12" />
                   </div>
                   <div className="w-1/3 flex flex-col">
-                    <label className="text-xl font-normal">Bairro</label>
+                    <label className="text-xl font-normal">Bairro:</label>
                     <input type="text" className="h-14 w-full" />
                   </div>
                   <div />
