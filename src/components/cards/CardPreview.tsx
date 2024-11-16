@@ -1,7 +1,9 @@
+'use client'
 import { useEffect, useState } from "react";
 import { BsEye } from "react-icons/bs";
 import { RiEditBoxLine } from "react-icons/ri";
-import View from "../ViewCard";
+import PopUpProntuario from "../popup/PopUpProntuario";
+import PopUpFicha from "../popup/PopUpFicha";
 
 interface PreviewProps {
   tipo: string;
@@ -17,6 +19,11 @@ interface PreviewProps {
   cidade: string;
   bairro: string;
   ativo?: boolean;
+  medicacoes?: string[];
+  diagnostico?: string[];
+  procedimento?: string[];
+  resultados?: string[];
+  doencas?: string[];
 }
 
 const Preview: React.FC<PreviewProps> = ({
@@ -33,11 +40,17 @@ const Preview: React.FC<PreviewProps> = ({
   cidade,
   bairro,
   ativo,
+  diagnostico,
+  medicacoes,
+  procedimento,
+  resultados,
+  doencas,
+  
 }) => {
   const [isActived, setActived] = useState("");
   const [view, setView] = useState(false);
 
-  // Variável auxiliar que verifica se 'ativo' está definido
+  
   const isAtivoPresent = ativo !== undefined;
 
   useEffect(() => {
@@ -51,9 +64,8 @@ const Preview: React.FC<PreviewProps> = ({
   };
 
   return (
-    <article
-      className="border-[1px] rounded-[3px] gap-4 border-[#207865] w-[42rem] h-56 bg-[#A3D6CB] duration-300 hover:shadow-lg shadow-black p-4 flex flex-row"
-    >
+    <article 
+    className="border-[1px] rounded-[3px] gap-4 border-[#207865] w-[42rem] h-56 bg-[#A3D6CB] duration-300 hover:shadow-lg shadow-black p-4 flex flex-row">
       <section className="flex flex-col gap-2 w-1/2">
         <p className="text-[#1F6657] text-3xl">{tipo}</p>
         <p className="text-2xl">Nome: {nome}</p>
@@ -75,9 +87,9 @@ const Preview: React.FC<PreviewProps> = ({
                     Status: <span className="text-[#962E15]"> {isActived} </span>
                   </p>
                 )}
+            <div className="h-full border-l-[3px] border-[#1F6657]" />
               </>
             )}
-            <div className="h-full border-l-[3px] border-[#1F6657]" />
             <button
               className="h-14 w-14 bg-transparent hover:bg-[#1F6657]/50 duration-200 rounded-full flex justify-center items-center"
               onClick={openView}
@@ -86,8 +98,10 @@ const Preview: React.FC<PreviewProps> = ({
               <BsEye color="#114238" size={40} />
             </button>
             {view && (
-              <View
-                tipo={"FICHA MÉDICA"}
+              <>
+              { tipo === "Prontuário" ? 
+                <PopUpProntuario 
+                tipo={tipo}
                 altura={altura}
                 peso={peso}
                 telefone={telefone}
@@ -101,7 +115,32 @@ const Preview: React.FC<PreviewProps> = ({
                 nome={nome}
                 idade={idade}
                 genero={genero}
-              />
+                ativo={ativo}
+                medicacoes={medicacoes}
+                diagnostico={diagnostico}
+                procedimento={procedimento}
+                resultados={resultados}
+                doencas={doencas}
+                />
+                :
+                <PopUpFicha
+                tipo={tipo}
+                altura={altura}
+                peso={peso}
+                telefone={telefone}
+                rua={rua}
+                numero={numero}
+                cidade={cidade}
+                bairro={bairro}
+                especificacoesAdicionais={especificacoesAdicionais}
+                isOpen={view}
+                onClose={() => setView(false)}
+                nome={nome}
+                idade={idade}
+                genero={genero}
+                />
+              }
+              </>
             )}
             <div className="h-full border-l-[3px] border-[#1F6657]" />
             <button
