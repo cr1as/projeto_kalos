@@ -1,10 +1,13 @@
 'use client'
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { BsEye } from "react-icons/bs";
 import { RiEditBoxLine } from "react-icons/ri";
 import PopUpProntuario from "../popup/PopUpProntuario";
 import PopUpFicha from "../popup/PopUpFicha";
+import EdicaoFicha from "../edit/EdicaoFicha";
+import EdicaoProntuario from "../edit/EdicaoProntuario";
 
+//! PROPS
 interface PreviewProps {
   tipo: string;
   nome: string;
@@ -47,22 +50,42 @@ const Preview: React.FC<PreviewProps> = ({
   doencas,
   
 }) => {
-  const [isActived, setActived] = useState("");
-  const [view, setView] = useState(false);
 
-  
+
+  //! VARIÁVEIS DO COMPONENTE
+  const [isActived, setActived] = useState("");
   const isAtivoPresent = ativo !== undefined;
 
+  //! FUNÇÕES DO COMPONENTE
   useEffect(() => {
     if (isAtivoPresent) {
       setActived(ativo ? "Ativo" : "Inativo");
     }
   }, [ativo, isAtivoPresent]);
 
-  const openView = () => {
-    setView(true);
-  };
+  //! VARIÁVEIS DO MODAL
+  const [view, setView] = useState(false);
+  const [edit, setEdit] = useState(false);
 
+
+  //!FUNÇÕES DO MODAL
+  const openView = useCallback(() => {
+    setView(true);
+  }, []);
+
+  const closeView = useCallback(() => {
+    setView(false);
+  }, []);
+
+  const openEdit = useCallback(() => {
+    setEdit(true);
+  }, []);
+
+  const closeEdit = useCallback(() => {
+    setEdit(false);
+  }, []);
+
+  //!RENDER
   return (
     <article 
     className="border-[1px] rounded-[3px] gap-4 border-[#207865] w-[42rem] h-56 bg-[#A3D6CB] duration-300 hover:shadow-lg shadow-black p-4 flex flex-row">
@@ -92,7 +115,7 @@ const Preview: React.FC<PreviewProps> = ({
             )}
             <button
               className="h-14 w-14 bg-transparent hover:bg-[#1F6657]/50 duration-200 rounded-full flex justify-center items-center"
-              onClick={openView}
+              onClick={() => {openView()}}
               aria-label="Visualizar detalhes"
             >
               <BsEye color="#114238" size={40} />
@@ -111,7 +134,7 @@ const Preview: React.FC<PreviewProps> = ({
                 bairro={bairro}
                 especificacoesAdicionais={especificacoesAdicionais}
                 isOpen={view}
-                onClose={() => setView(false)}
+                onClose={() => {closeView()}}
                 nome={nome}
                 idade={idade}
                 genero={genero}
@@ -134,7 +157,7 @@ const Preview: React.FC<PreviewProps> = ({
                 bairro={bairro}
                 especificacoesAdicionais={especificacoesAdicionais}
                 isOpen={view}
-                onClose={() => setView(false)}
+                onClose={() => {closeView()}}
                 nome={nome}
                 idade={idade}
                 genero={genero}
@@ -143,12 +166,48 @@ const Preview: React.FC<PreviewProps> = ({
               </>
             )}
             <div className="h-full border-l-[3px] border-[#1F6657]" />
-            <button
+            <div
               className="h-14 w-14 bg-transparent hover:bg-[#1F6657]/50 duration-200 rounded-full flex justify-center items-center"
               aria-label="Editar detalhes"
+              onClick={() => {openEdit()}}
             >
               <RiEditBoxLine color="#114238" size={40} />
-            </button>
+            </div>
+            {edit && (
+                  tipo === "Prontuário" ?
+                    <EdicaoProntuario 
+                      altura={altura}
+                      peso={peso}
+                      telefone={telefone}
+                      rua={rua}
+                      numero={numero}
+                      cidade={cidade}
+                      bairro={bairro}
+                      especificacoesAdicionais={especificacoesAdicionais}
+                      isOpen={edit}
+                      onClose={() => {closeEdit()}}
+                      nome={nome}
+                      idade={idade}
+                      genero={genero}
+                    />
+                  :
+                  <EdicaoFicha 
+                      altura={altura}
+                      peso={peso}
+                      telefone={telefone}
+                      rua={rua}
+                      numero={numero}
+                      cidade={cidade}
+                      bairro={bairro}
+                      especificacoesAdicionais={especificacoesAdicionais}
+                      isOpen={edit}
+                      onClose={() => {closeEdit()}}
+                      nome={nome}
+                      idade={idade}
+                      genero={genero}
+                    />
+                )
+              }
           </div>
         </header>
         <footer className="h-1/2 flex flex-col justify-end">
