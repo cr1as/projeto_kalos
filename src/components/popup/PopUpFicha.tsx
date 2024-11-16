@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { MdClose } from "react-icons/md";
 
+
 interface ViewProps {
   isOpen: boolean;
   onClose: () => void;
@@ -20,7 +21,7 @@ interface ViewProps {
   bairro: string;
 }
 
-const ViewMedicalRecord: React.FC<ViewProps> = ({
+const ViewFichaRecentes: React.FC<ViewProps> = ({
   isOpen,
   onClose,
   tipo,
@@ -36,8 +37,11 @@ const ViewMedicalRecord: React.FC<ViewProps> = ({
   telefone,
   especificacoesAdicionais
 }) => {
+
+
   const [isVisible, setIsVisible] = useState(isOpen);
   const [isAnimating, setIsAnimating] = useState(false);
+
 
   useEffect(
     () => {
@@ -57,40 +61,44 @@ const ViewMedicalRecord: React.FC<ViewProps> = ({
   );
 
   return (
-    <div
-      className={`fixed inset-0 z-0 flex items-center justify-center ${isVisible
-        ? "block"
-        : "hidden"}`}
-      role="dialog"
-      aria-labelledby="medical-record-title"
-      aria-hidden={!isVisible}
-    >
+    <div>
       <div
-        className={`absolute inset-0 bg-black/15 transition-opacity duration-300 ease-in-out ${isAnimating
+        className={`fixed inset-0 z-0 flex items-center justify-center ${isVisible
+          ? "block"
+          : "hidden"}`}
+        role="dialog"
+        aria-labelledby="medical-record-title"
+        aria-hidden={!isVisible}
+      />
+      <div
+        className={`absolute inset-0 bg-black/15 transition-opacity duration-300 ease-in-out justify-center items-center flex ${isAnimating
           ? "opacity-100"
           : "opacity-0"}`}
         aria-hidden="true"
-        onClick={onClose}
-      />
-      <article
-        className={`relative h-screen w-[70rem] bg-[#A3D6CB] border-2 rounded-[3px] border-[#114238] shadow-xl transition-transform duration-300 ease-in-out ${isAnimating
-          ? ""
-          : ""}`}
       >
+        <article
+          className={`relative h-[40rem] w-[70rem] overflow-auto bg-[#A3D6CB] border-2 rounded-[3px] border-[#114238] shadow-xl transition-transform duration-300 ease-in-out ${isAnimating
+            ? ""
+            : ""}`}
+        >
         <section className="p-8 w-full h-full">
           <header className="w-full">
             <nav className="flex h-12 w-full justify-between items-center">
               <h1
                 className="text-5xl font-bold text-[#114238]"
               >
-                {tipo}
+                TESTE{tipo}
               </h1>
               <button
-                onClick={onClose}
-                className="text-black"
-              >
-                <MdClose size={40} />
-              </button>
+  onClick={() => {
+    console.log("Fechar popup");
+    onClose();
+  }}
+  className="text-black"
+>
+  <MdClose size={40} />
+</button>
+
             </nav>
           </header>
           <main className="w-full h-full text-2xl text-black">
@@ -156,7 +164,8 @@ const ViewMedicalRecord: React.FC<ViewProps> = ({
         </section>
       </article>
     </div>
+    </div>
   );
 };
 
-export default ViewMedicalRecord;
+export default ViewFichaRecentes;
