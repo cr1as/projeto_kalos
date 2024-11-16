@@ -2,19 +2,21 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Drawer from "../Drawer";
 import searchIcon from "@/icons/search_icon.svg";
 import { FaSquarePlus } from "react-icons/fa6";
-import CardCriacao from "../create/MedicalForm";
+import CriacaoFicha from "../create/CriacaoFicha";
+import CriacaoProntuario from "../create/CriacaoProntuario";
 
 interface navBarProps {
-  name: string;
+  nome: string;
 }
 
-const NavBar: React.FC<navBarProps> = ({ name }) => {
+const NavBar: React.FC<navBarProps> = ({ nome }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [criar, setCriar] = useState(false);
+  const [type, setType] = useState(false);
 
   const openDrawer = () => {
     setIsDrawerOpen(true);
@@ -27,8 +29,28 @@ const NavBar: React.FC<navBarProps> = ({ name }) => {
   const criarProntuario = () => {
     setCriar(true);
   };
+
   const fecharProntuario = () => {
     setCriar(false);
+  };
+
+  useEffect(() => {
+    if (nome === "Prontuários") setType(true);
+    else setType(false);
+
+    // Atualiza o drawer para a posição inicial
+    return () => {
+      closeDrawer();
+    };
+  }, [nome]);
+
+  // Renderização condicional simplificada
+  const Render: React.FC = () => {
+    return type ? (
+      <CriacaoProntuario isOpen={criar} onClose={fecharProntuario} />
+    ) : (
+      <CriacaoFicha isOpen={criar} onClose={fecharProntuario} />
+    );
   };
 
   return (
@@ -46,10 +68,8 @@ const NavBar: React.FC<navBarProps> = ({ name }) => {
         <Drawer isOpen={isDrawerOpen} onClose={closeDrawer} />
         <div className="w-3/4 h-full flex items-center gap-2">
           <Link href="/">
-            <h1
-              className={`font-bold text-5xl text-[#114238] `}
-            >
-              {name}
+            <h1 className={`font-bold text-5xl text-[#114238] `}>
+              {nome}
             </h1>
           </Link>
           <div className="border-t border-2 border-[#1F6657] w-44" />
@@ -61,11 +81,11 @@ const NavBar: React.FC<navBarProps> = ({ name }) => {
           onClick={criarProntuario}
         >
           <p className="text-xl font-medium text-[#114238]">
-            Criar novo prontuário
+            {`Criar nov${type ? "o Prontuário" : "a Ficha"}`}
           </p>
           <FaSquarePlus color="#114238" size={18} />
         </button>
-        <CardCriacao isOpen={criar} onClose={fecharProntuario} />
+        <Render />
         <div className="m-10 flex items-center border border-black rounded-full w-[25rem] overflow-hidden">
           <div className="p-2">
             <Image
@@ -78,7 +98,7 @@ const NavBar: React.FC<navBarProps> = ({ name }) => {
           </div>
           <input
             type="text"
-            placeholder={`Pesquisar ${name}...`}
+            placeholder={`Pesquisar ${nome}...`}
             className={`w-full p-2 text-center outline-none text-[#114238] bg-transparent`}
           />
         </div>
@@ -86,4 +106,5 @@ const NavBar: React.FC<navBarProps> = ({ name }) => {
     </nav>
   );
 };
+
 export default NavBar;

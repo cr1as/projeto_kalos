@@ -9,7 +9,7 @@ const MainLayout: React.FC<mainLayoutProps> = ({ children, nav }) => {
   return (
     <div>
       <nav className="sticky top-0">
-        <NavBar name={nav} />
+        <NavBar nome={nav} />
       </nav>
       <div>
         {children}
