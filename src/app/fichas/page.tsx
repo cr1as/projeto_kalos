@@ -3,7 +3,7 @@
 
 import MainLayout from "@/components/layouts/MainLayout";
 import { pacientes } from "@/mock/registros";
-import Preview from "@/components/preview/PreviewFichas";
+import Preview from "@/components/cards/CardPreview";
 import { useEffect, useState } from "react";
 
 interface Paciente {

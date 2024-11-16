@@ -1,16 +1,17 @@
 "use client";
 
 import MainLayout from "@/components/layouts/MainLayout";
-import MedicalRecord from "@/components/MedicalRecordsList";
+import FichaRecentes from "@/components/cards/FichaRecentes";
 import { pacientes } from "@/mock/registros";
 
-const page: React.FC = () => {
+const page: React.FC = () => { 
+
   return (
     <MainLayout nav="Recém acessados">  
       <div className="w-full flex justify-center">
         <div className="w-4/5 grid grid-cols-3 gap-10 justify-items-center">
           {pacientes.map(registro =>
-            <MedicalRecord
+            <FichaRecentes
             key={registro.nome}
             tipo={registro.tipo}
             nome={registro.nome}
