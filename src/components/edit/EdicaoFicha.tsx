@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { MdClose } from "react-icons/md";
 
 interface CardCriacaoProps {
@@ -19,7 +19,7 @@ interface CardCriacaoProps {
   bairro: string;
 }
 
-const CardCriacao: React.FC<CardCriacaoProps> = ({
+const EdicaoFicha: React.FC<CardCriacaoProps> = ({
   isOpen,
   onClose,
   nome,
@@ -54,6 +54,11 @@ const CardCriacao: React.FC<CardCriacaoProps> = ({
     [isOpen]
   );
 
+  const cadastrar = () => {
+    onClose();
+  };
+
+
   return (
     <div
       className={`fixed inset-0 z-0 flex items-center justify-center ${isVisible
@@ -65,7 +70,6 @@ const CardCriacao: React.FC<CardCriacaoProps> = ({
           ? "opacity-100"
           : "opacity-0"}`}
         aria-hidden="true"
-        onClick={onClose}
       />
       <div
         className={`relative h-11/12 w-[80rem] bg-[#A3D6CB]  border-2 rounded-[3px] border-[#114238] shadow-xl transition-transform duration-300 ease-in-out ${isAnimating
@@ -73,18 +77,29 @@ const CardCriacao: React.FC<CardCriacaoProps> = ({
           : ""}`}
       >
         <div className="p-4 w-full h-full">
-          <div className="w-full h-full ">
+          <div className="w-full h-full">
             <nav className="w-full flex justify-between items-center gap-4">
               <article className="flex gap-4">
-                <button className="text-black" onClick={onClose}>
+                <button
+                  className="text-black"
+                  onClick={() => {
+                    console.log("X");
+                    onClose();
+                  }}
+                  >
                   <MdClose size={40} />
                 </button>
                 <h1 className="text-5xl text-[#114238]">FICHA MÉDICA</h1>
               </article>
-
-              <button className="text-black" onClick={onClose}>
+              <button className="text-black" 
+              onClick={ () => { cadastrar()
+                console.log("CADASTRA");
+                onClose();
+              }}
+              >
                 <div>
                   <div className="bg-[#207865] w-44 h-12 rounded-full flex justify-center items-center text-white text-2xl">
+                  
                     Cadastrar
                   </div>
                 </div>
@@ -197,4 +212,4 @@ const CardCriacao: React.FC<CardCriacaoProps> = ({
   );
 };
 
-export default CardCriacao;
+export default EdicaoFicha;
