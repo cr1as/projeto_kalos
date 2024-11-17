@@ -77,9 +77,7 @@ const ViewFichaRecentes: React.FC<ViewProps> = ({
         aria-hidden="true"
       >
         <article
-          className={`relative h-[40rem] w-[70rem] overflow-auto bg-[#A3D6CB] border-2 rounded-[3px] border-[#114238] shadow-xl transition-transform duration-300 ease-in-out ${isAnimating
-            ? ""
-            : ""}`}
+          className="relative h-[40rem] w-[70rem] overflow-auto bg-[#A3D6CB] border-2 rounded-[3px] border-[#114238] shadow-xl transition-transform duration-300 ease-in-out"
         >
         <section className="p-8 w-full h-full">
           <header className="w-full">
@@ -90,15 +88,13 @@ const ViewFichaRecentes: React.FC<ViewProps> = ({
                 TESTE{tipo}
               </h1>
               <button
-  onClick={() => {
-    console.log("Fechar popup");
-    onClose();
-  }}
-  className="text-black"
->
-  <MdClose size={40} />
-</button>
-
+                onClick={() => {
+                  onClose();
+                }}
+                className="text-black"
+              >
+                <MdClose size={40} />
+              </button>
             </nav>
           </header>
           <main className="w-full h-full text-2xl text-black">
