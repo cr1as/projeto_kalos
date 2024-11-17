@@ -189,6 +189,11 @@ const Preview: React.FC<PreviewProps> = ({
                       nome={nome}
                       idade={idade}
                       genero={genero}
+                      diagnostico={diagnostico}
+                      medicacoes={medicacoes}
+                      procedimento={procedimento}
+                      resultados={resultados}
+                      doencas={doencas}
                     />
                   :
                   <EdicaoFicha 
