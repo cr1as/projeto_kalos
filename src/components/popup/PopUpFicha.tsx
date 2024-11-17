@@ -85,7 +85,7 @@ const ViewFichaRecentes: React.FC<ViewProps> = ({
               <h1
                 className="text-5xl font-bold text-[#114238]"
               >
-                TESTE{tipo}
+                {tipo}
               </h1>
               <button
                 onClick={() => {
