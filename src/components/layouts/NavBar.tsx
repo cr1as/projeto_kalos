@@ -37,14 +37,11 @@ const NavBar: React.FC<navBarProps> = ({ nome }) => {
   useEffect(() => {
     if (nome === "Prontuários") setType(true);
     else setType(false);
-
-    // Atualiza o drawer para a posição inicial
     return () => {
       closeDrawer();
     };
   }, [nome]);
 
-  // Renderização condicional simplificada
   const Render: React.FC = () => {
     return type ? (
       <CriacaoProntuario isOpen={criar} onClose={fecharProntuario} />
@@ -54,7 +51,7 @@ const NavBar: React.FC<navBarProps> = ({ nome }) => {
   };
 
   return (
-    <nav className="w-full h-28 flex flex-row bg-[#F1FFFC]">
+    <header className="w-full h-28 flex flex-row bg-[#F1FFFC]">
       <div className="w-1/2 h-full flex">
         <div className="w-1/4 h-full flex justify-center items-center">
           <button onClick={openDrawer}>
@@ -103,7 +100,7 @@ const NavBar: React.FC<navBarProps> = ({ nome }) => {
           />
         </div>
       </div>
-    </nav>
+    </header>
   );
 };
 
