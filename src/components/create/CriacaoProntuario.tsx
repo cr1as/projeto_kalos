@@ -51,7 +51,7 @@ const CardCriacao: React.FC<CardCriacaoProps> = ({ isOpen, onClose }) => {
       >
         <div className="p-4 w-full h-full">
           <div className="w-full h-full ">
-            <nav className="w-full flex justify-between items-center gap-4">
+            <header className="w-full flex justify-between items-center gap-4">
               <article className="flex gap-8 items-center">
                 <button className="text-black" onClick={onClose}>
                   <MdClose size={40} />
@@ -67,7 +67,7 @@ const CardCriacao: React.FC<CardCriacaoProps> = ({ isOpen, onClose }) => {
                   </div>
                 </div>
               </button>
-            </nav>
+            </header>
             <article className="flex justify-around">
               <div className="w-11/12 flex flex-col ">
                 <article className="flex flex-col">
