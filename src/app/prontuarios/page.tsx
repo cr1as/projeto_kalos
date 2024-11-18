@@ -3,7 +3,9 @@
 
 import Preview from "@/components/cards/CardPreview";
 import MainLayout from "@/components/layouts/MainLayout";
+import useAuthCookie from "@/hooks/cookies";
 import { pacientes } from "@/mock/registros";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 interface Paciente {
@@ -30,9 +32,18 @@ interface Paciente {
 
 const page: React.FC = () => {
   const [prontuarios, setProntuarios] = useState<Paciente[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const token = useAuthCookie();
 
   useEffect(() => {
-    
+    const checkToken = async () => {
+      const auth = await token.getAuthCookie();
+      setIsAuthenticated(!!auth);
+      setIsLoading(false);
+    };
+
+    checkToken();
     const registrosFiltrados = pacientes
       .filter(registro => registro.tipo === "Prontuário")
       .map(registro => ({
@@ -41,10 +52,31 @@ const page: React.FC = () => {
       }));
 
     setProntuarios(registrosFiltrados as Paciente[]);
-  }, []);
+  }, [token]);
+
+  if (isLoading) {
+    return (
+      <div className="h-screen w-screen flex justify-center items-center">
+        <p className="text-xl text-gray-500">Verificando autenticação...</p>
+      </div>
+    );
+  }
 
   return (
-    <MainLayout nav="Prontuários">
+    <div>
+      {!isAuthenticated
+        ? <div className="h-screen w-screen flex justify-center items-center flex-col gap-24">
+            <h1 className="text-6xl font-medium text-[#2B816E]">
+              VOCÊ AINDA NÃO TEM LOGIN!
+            </h1>
+            <Link href={"/login"}>
+              <button className="h-16 w-80 bg-[#A3D6CB] rounded-sm text-3xl font-semibold">
+                LOGIN
+              </button>
+            </Link>
+          </div>
+        :
+        <MainLayout nav="Prontuários">
       <div className="w-full flex justify-center">
         <div className="grid grid-cols-2 gap-10 justify-items-center">
           {prontuarios.map(prontuario => (
@@ -54,25 +86,27 @@ const page: React.FC = () => {
             procedimento={prontuario.procedimento}
             resultados={prontuario.resultados}
             doencas={prontuario.doencas}
-              tipo={prontuario.tipo}
-              nome={prontuario.nome}
-              genero={prontuario.genero}
-              idade={prontuario.idade}
-              altura={prontuario.altura}
-              peso={prontuario.peso}
-              telefone={prontuario.telefone}
-              cidade={prontuario.cidade}
-              bairro={prontuario.bairro}
-              rua={prontuario.rua}
-              numero={prontuario.numero}
-              especificacoesAdicionais={prontuario.especificacoesAdicionais}
-              ativo={prontuario.ativo}
-              medicacoes={prontuario.medicacoes}
+            tipo={prontuario.tipo}
+            nome={prontuario.nome}
+            genero={prontuario.genero}
+            idade={prontuario.idade}
+            altura={prontuario.altura}
+            peso={prontuario.peso}
+            telefone={prontuario.telefone}
+            cidade={prontuario.cidade}
+            bairro={prontuario.bairro}
+            rua={prontuario.rua}
+            numero={prontuario.numero}
+            especificacoesAdicionais={prontuario.especificacoesAdicionais}
+            ativo={prontuario.ativo}
+            medicacoes={prontuario.medicacoes}
             />
           ))}
         </div>
       </div>
     </MainLayout>
+        }
+    </div>
   );
 };
 
