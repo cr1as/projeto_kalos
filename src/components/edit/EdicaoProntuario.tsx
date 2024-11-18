@@ -80,7 +80,7 @@ const CardEdicao: React.FC<cardEdicaoProps> = ({
       >
         <div className="p-4 w-full h-full ">
           <div className="w-full h-full overflow-auto">
-            <nav className="w-full flex justify-between items-center gap-4">
+            <header className="w-full flex justify-between items-center gap-4">
               <article className="flex gap-4">
                 <button className="text-black" onClick={onClose}>
                   <MdClose size={40} />
@@ -95,7 +95,7 @@ const CardEdicao: React.FC<cardEdicaoProps> = ({
                   </div>
                 </div>
               </button>
-            </nav>
+            </header>
             <article className="flex justify-center text-black">
               <div className="w-11/12 flex flex-col ">
                 <article className="flex flex-col">

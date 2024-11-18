@@ -78,7 +78,7 @@ const EdicaoFicha: React.FC<CardCriacaoProps> = ({
       >
         <div className="p-4 w-full h-full">
           <div className="w-full h-full">
-            <nav className="w-full flex justify-between items-center gap-4">
+            <header className="w-full flex justify-between items-center gap-4">
               <article className="flex gap-4">
                 <button
                   className="text-black"
@@ -104,12 +104,12 @@ const EdicaoFicha: React.FC<CardCriacaoProps> = ({
                   </div>
                 </div>
               </button>
-            </nav>
+            </header>
             <article className="flex justify-center">
               <div className="w-11/12 flex flex-col ">
                 <article className="flex flex-col">
                   <label className="text-xl font-normal">Nome</label>
-                  <input type="text" className="h-14 w-full" content={nome} />
+                  <input type="text" className="h-14 w-full" placeholder={nome} />
                 </article>
                 <article className="flex">
                   <div className="w-1/2 flex flex-col">
@@ -117,7 +117,7 @@ const EdicaoFicha: React.FC<CardCriacaoProps> = ({
                     <input
                       type="text"
                       className="h-14 w-11/12"
-                      content={idade}
+                      placeholder={idade}
                     />
                   </div>
                   <div className="w-1/2 flex flex-col">
@@ -125,7 +125,7 @@ const EdicaoFicha: React.FC<CardCriacaoProps> = ({
                     <input
                       type="text"
                       className="h-14 w-full"
-                      content={genero}
+                      placeholder={genero}
                     />
                   </div>
                 </article>
@@ -136,7 +136,7 @@ const EdicaoFicha: React.FC<CardCriacaoProps> = ({
                       <input
                         type="text"
                         className="h-14 w-11/12"
-                        content={peso}
+                        placeholder={peso}
                       />
                     </div>
                     <div className="w-1/2 flex flex-col">
@@ -144,7 +144,7 @@ const EdicaoFicha: React.FC<CardCriacaoProps> = ({
                       <input
                         type="text"
                         className="h-14 w-11/12"
-                        content={altura}
+                        placeholder={altura}
                       />
                     </div>
                   </div>
@@ -153,7 +153,7 @@ const EdicaoFicha: React.FC<CardCriacaoProps> = ({
                     <input
                       type="text"
                       className="h-14 w-full"
-                      content={telefone}
+                      placeholder={telefone}
                     />
                   </div>
                 </article>
@@ -163,14 +163,14 @@ const EdicaoFicha: React.FC<CardCriacaoProps> = ({
                 <article className="flex">
                   <div className="w-3/4 flex flex-col">
                     <label className="text-xl font-normal">Rua</label>
-                    <input type="text" className="h-14 w-11/12" content={rua} />
+                    <input type="text" className="h-14 w-11/12" placeholder={rua} />
                   </div>
                   <div className="w-1/4 flex flex-col">
                     <label className="text-xl font-normal">Número</label>
                     <input
                       type="text"
                       className="h-14 w-full"
-                      content={numero}
+                      placeholder={numero}
                     />
                   </div>
                 </article>
@@ -180,7 +180,7 @@ const EdicaoFicha: React.FC<CardCriacaoProps> = ({
                     <input
                       type="text"
                       className="h-14 w-11/12"
-                      content={cidade}
+                      placeholder={cidade}
                     />
                   </div>
                   <div className="w-1/3 flex flex-col">
@@ -188,7 +188,7 @@ const EdicaoFicha: React.FC<CardCriacaoProps> = ({
                     <input
                       type="text"
                       className="h-14 w-full"
-                      content={bairro}
+                      placeholder={bairro}
                     />
                   </div>
                   <div />
@@ -199,7 +199,7 @@ const EdicaoFicha: React.FC<CardCriacaoProps> = ({
                     <input
                       type="text"
                       className="h-14 w-full"
-                      content={especificacoesAdicionais}
+                      placeholder={especificacoesAdicionais}
                     />
                   </div>
                 </article>

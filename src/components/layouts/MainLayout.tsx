@@ -8,9 +8,9 @@ interface mainLayoutProps {
 const MainLayout: React.FC<mainLayoutProps> = ({ children, nav }) => {
   return (
     <div>
-      <nav className="sticky top-0">
+      <div>
         <NavBar nome={nav} />
-      </nav>
+      </div>
       <div>
         {children}
       </div>

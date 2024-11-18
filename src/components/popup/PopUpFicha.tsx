@@ -81,7 +81,7 @@ const ViewFichaRecentes: React.FC<ViewProps> = ({
         >
         <section className="p-8 w-full h-full">
           <header className="w-full">
-            <nav className="flex h-12 w-full justify-between items-center">
+            <header className="flex h-12 w-full justify-between items-center">
               <h1
                 className="text-5xl font-bold text-[#114238]"
               >
@@ -95,7 +95,7 @@ const ViewFichaRecentes: React.FC<ViewProps> = ({
               >
                 <MdClose size={40} />
               </button>
-            </nav>
+            </header>
           </header>
           <main className="w-full h-full text-2xl text-black">
             <section className="my-6">

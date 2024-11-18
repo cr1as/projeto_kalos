@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import useAuthCookie from "@/hooks/cookies";
 import useVerify from "@/hooks/verificacao";
+import useAuthCookie from '@/hooks/cookies';
 
 const Page: React.FC = () => {
   const [login, setLogin] = useState(false);
@@ -11,36 +11,37 @@ const Page: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const token = useAuthCookie();
   const verify = useVerify();
-   
+
+
   const [formData, setFormData] = useState({
     username: "",
-    password: "",
+    password: ""
   });
-
-  useEffect(() => {
-
-    const checkToken = async () => {
-      const auth = await token.getAuthCookie();
-      setIsAuthenticated(!!auth); 
-      setIsLoading(false); 
-    };
-
-    checkToken();
-  }, [token]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  useEffect(() => {
+   
+    const checkToken = async () => {
+      const auth = await token.getAuthCookie();
+      setIsAuthenticated(!!auth);
+      setIsLoading(false);
+    };
+
+    checkToken();
+  }, [token]);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (verify.login(formData.username, formData.password)) {
-      setLogin(true);
-      token.setAuthCookie();
+    if (verify.createAcount(formData.username)) {
+        setLogin(true)
+        token.setAuthCookie();
     } else {
-      alert("USUÁRIO OU SENHA INCORRETOS!");
+      alert("USUÁRIO JÁ EXISTENTE!");
     }
   };
 
@@ -68,11 +69,11 @@ const Page: React.FC = () => {
               </div>
               <div className="flex flex-col justify-center items-center gap-4">
                 <p className="font-medium text-white text-2xl">
-                  Não tem uma conta? Cadastre-se
+                Já tem uma conta? Faça o login
                 </p>
-                <Link href="/cadastro">
+                <Link href="/login">
                   <button className="bg-[#F5F5F5] border-[1px] border-[#114238] text-black font-medium text-3xl w-56 h-20 rounded-sm shadow-xl">
-                    cadastro
+                    login
                   </button>
                 </Link>
               </div>
@@ -92,7 +93,7 @@ const Page: React.FC = () => {
               <section className="w-full h-full flex flex-col justify-center items-center gap-24">
                 <div>
                   <h1 className="text-6xl font-medium text-[#2B816E]">
-                  Faça seu login
+                  Faça seu cadastro
                   </h1>
                 </div>
                 <form
