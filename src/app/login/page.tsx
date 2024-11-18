@@ -7,8 +7,8 @@ import useVerify from "@/hooks/verificacao";
 
 const Page: React.FC = () => {
   const [login, setLogin] = useState(false);
-  const [isLoading, setIsLoading] = useState(true); // Adicionado estado de carregamento
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Estado para verificar autenticação
+  const [isLoading, setIsLoading] = useState(true); 
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const token = useAuthCookie();
   const verify = useVerify();
    
@@ -18,11 +18,11 @@ const Page: React.FC = () => {
   });
 
   useEffect(() => {
-    // Simula a verificação de token
+
     const checkToken = async () => {
       const auth = await token.getAuthCookie();
-      setIsAuthenticated(!!auth); // Atualiza o estado se o token for válido
-      setIsLoading(false); // Finaliza o carregamento
+      setIsAuthenticated(!!auth); 
+      setIsLoading(false); 
     };
 
     checkToken();
