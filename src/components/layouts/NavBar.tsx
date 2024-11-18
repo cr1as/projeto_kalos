@@ -8,7 +8,7 @@ import searchIcon from "@/icons/search_icon.svg";
 import { FaSquarePlus } from "react-icons/fa6";
 import CriacaoFicha from "../create/CriacaoFicha";
 import CriacaoProntuario from "../create/CriacaoProntuario";
-
+import { MdOutlineMenu } from "react-icons/md";
 interface navBarProps {
   nome: string;
 }
@@ -55,11 +55,7 @@ const NavBar: React.FC<navBarProps> = ({ nome }) => {
       <div className="w-1/2 h-full flex">
         <div className="w-1/4 h-full flex justify-center items-center">
           <button onClick={openDrawer}>
-            <img
-              src="https://cdn-icons-png.flaticon.com/512/7216/7216128.png"
-              className="h-10"
-              alt=""
-            />
+          <MdOutlineMenu size={40}/>
           </button>
         </div>
         <Drawer isOpen={isDrawerOpen} onClose={closeDrawer} />
