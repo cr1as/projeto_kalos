@@ -3,7 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { MdClose } from "react-icons/md";
 import { IoMdArrowDropright } from "react-icons/io";
-
+import { IoMdExit } from "react-icons/io";
+import useAuthCookie from "@/hooks/cookies";
 interface DrawerProps {
   isOpen: boolean;
   onClose: () => void;
@@ -27,7 +28,11 @@ const componentes_drawer = [
 const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose }) => {
   const [isVisible, setIsVisible] = useState(isOpen);
   const [isAnimating, setIsAnimating] = useState(false);
-
+  const token = useAuthCookie();
+  const deslogar = () => {
+    token.removeAuthCookie();
+    onClose();
+  }
   useEffect(
     () => {
       if (isOpen) {
@@ -55,19 +60,20 @@ const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose }) => {
         onClick={onClose}
       />
       <div
-        className={`fixed left-0 top-0 h-full bg-[#A3D6CB] border-r-4 border-[#114238] shadow-xl transition-transform duration-300 ease-in-out w-[25rem] ${isAnimating
+        className={`fixed left-0 top-0 flex flex-col h-full bg-[#A3D6CB] border-r-4 border-[#114238] shadow-xl transition-transform duration-300 ease-in-out w-[25rem] ${isAnimating
           ? "translate-x-0"
           : "-translate-x-full"}`}
       >
-        <div className="p-4 ">
+        <div className="p-4">
           <div className="flex w-full justify-end m-2">
             <button className="text-black" onClick={onClose}>
               <MdClose size={40} />
             </button>
           </div>
         </div>
-        <div className="flex flex-col h-full">
-          <div className="overflow-y-auto flex flex-col p-4 gap-12">
+
+        <div className="flex flex-col">
+          <div className=" h-full flex flex-col p-4 gap-12">
             {componentes_drawer.map(componente => {
               return (
                 <li
@@ -84,8 +90,14 @@ const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose }) => {
               );
             })}
           </div>
-          <div className="flex flex-row justify-around my-8" />
+          
         </div>
+        <div className="h-1/2">
+          <div className="h-full flex flex-col justify-end items-center">
+            <button onClick={deslogar} className="h-14 w-32 bg--500 flex items-center justify-center gap-8">
+              <p className="text-2xl text-white">sair</p> <IoMdExit color="white" size={40}/> </button>
+          </div>
+          </div>
       </div>
     </div>
   );
