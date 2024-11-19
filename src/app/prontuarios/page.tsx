@@ -5,7 +5,7 @@ import Preview from "@/components/cards/CardPreview";
 import MainLayout from "@/components/layouts/MainLayout";
 import useAuthCookie from "@/hooks/cookies";
 import { pacientes } from "@/mock/registros";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 interface Paciente {
@@ -35,6 +35,7 @@ const page: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const token = useAuthCookie();
+  const router = useRouter();
 
   useEffect(() => {
     const checkToken = async () => {
@@ -48,11 +49,14 @@ const page: React.FC = () => {
       .filter(registro => registro.tipo === "Prontuário")
       .map(registro => ({
         ...registro,
-        ativo: registro.ativo ?? false,
+        ativo: registro.ativo && false,
       }));
 
     setProntuarios(registrosFiltrados as Paciente[]);
-  }, [token]);
+    if (!isLoading && !isAuthenticated) {
+      router.push("/login");
+    }
+  }, [isAuthenticated, isLoading, router, token]);
 
   if (isLoading) {
     return (
@@ -63,19 +67,7 @@ const page: React.FC = () => {
   }
 
   return (
-    <div>
-      {!isAuthenticated
-        ? <div className="h-screen w-screen flex justify-center items-center flex-col gap-24">
-            <h1 className="text-6xl font-medium text-[#2B816E]">
-              VOCÊ AINDA NÃO TEM LOGIN!
-            </h1>
-            <Link href={"/login"}>
-              <button className="h-16 w-80 bg-[#A3D6CB] rounded-sm text-3xl font-semibold">
-                LOGIN
-              </button>
-            </Link>
-          </div>
-        :
+
         <MainLayout nav="Prontuários">
       <div className="w-full flex justify-center">
         <div className="grid grid-cols-2 gap-10 justify-items-center">
@@ -105,8 +97,6 @@ const page: React.FC = () => {
         </div>
       </div>
     </MainLayout>
-        }
-    </div>
   );
 };
 

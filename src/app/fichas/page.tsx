@@ -7,6 +7,7 @@ import Preview from "@/components/cards/CardPreview";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import useAuthCookie from "@/hooks/cookies";
+import { useRouter } from "next/navigation";
 
 interface Paciente {
   nome: string;
@@ -29,6 +30,7 @@ const page: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const token = useAuthCookie();
+  const router = useRouter();
 
   useEffect(
     () => {
@@ -42,8 +44,11 @@ const page: React.FC = () => {
       setProntuarios(
         pacientes.filter(registro => registro.tipo === "Ficha Médica")
       );
+      if (!isLoading && !isAuthenticated) {
+        router.push("/login");
+      }
     },
-    [token]
+    [isAuthenticated, isLoading, router, token]
   );
 
   if (isLoading) {
@@ -53,6 +58,7 @@ const page: React.FC = () => {
       </div>
     );
   }
+  
 
   return (
     <div>

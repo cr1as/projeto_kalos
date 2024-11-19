@@ -31,7 +31,6 @@ const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose }) => {
   const token = useAuthCookie();
   const deslogar = () => {
     token.removeAuthCookie();
-    onClose();
   }
   useEffect(
     () => {
