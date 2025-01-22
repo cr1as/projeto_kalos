@@ -3,8 +3,8 @@
 
 import Preview from "@/components/cards/CardPreview";
 import MainLayout from  "@/ui/layouts/MainLayout";
-import useAuthCookie from "@/hooks/cookies";
-import { pacientes } from "@/mock/registros";
+import useAuthCookie from "@/lib/hooks/cookies";
+import { pacientes } from "@/lib/mock/registros";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 

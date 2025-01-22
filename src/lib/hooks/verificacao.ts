@@ -1,4 +1,4 @@
-import { funcionarios } from "@/mock/funcionarios";
+import { funcionarios } from "@/lib/mock/funcionarios";
 
 interface UseVerify {
   login: (usuario: string, senha: string) => boolean;

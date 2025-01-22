@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import useAuthCookie from "@/hooks/cookies";
-import useVerify from "@/hooks/verificacao";
+import useAuthCookie from "@/lib/hooks/cookies";
+import useVerify from "@/lib/hooks/verificacao";
 import { useRouter } from "next/navigation";
 
 const Page: React.FC = () => {

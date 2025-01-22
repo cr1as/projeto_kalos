@@ -2,11 +2,11 @@
 "use client";
 
 import MainLayout from  "@/ui/layouts/MainLayout";
-import { pacientes } from "@/mock/registros";
+import { pacientes } from "@/lib/mock/registros";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import useAuthCookie from "@/hooks/cookies";
+import useAuthCookie from "@/lib/hooks/cookies";
 import { useRouter } from "next/navigation";
 import Preview from "@/ui/cards/CardPreview";
 
