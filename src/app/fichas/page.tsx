@@ -1,13 +1,14 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 
-import MainLayout from "@/components/layouts/MainLayout";
+import MainLayout from  "@/ui/layouts/MainLayout";
 import { pacientes } from "@/mock/registros";
-import Preview from "@/components/cards/CardPreview";
+
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import useAuthCookie from "@/hooks/cookies";
 import { useRouter } from "next/navigation";
+import Preview from "@/ui/cards/CardPreview";
 
 interface Paciente {
   nome: string;
@@ -32,24 +33,27 @@ const page: React.FC = () => {
   const token = useAuthCookie();
   const router = useRouter();
 
-  useEffect(
-    () => {
-      const checkToken = async () => {
-        const auth = await token.getAuthCookie();
-        setIsAuthenticated(!!auth);
-        setIsLoading(false);
-      };
+  useEffect(() => {
+    const checkToken = async () => {
+      const auth = await token.getAuthCookie();
+      setIsAuthenticated(!!auth);
+      setIsLoading(false);
+    };
 
-      checkToken();
-      setProntuarios(
-        pacientes.filter(registro => registro.tipo === "Ficha Médica")
-      );
-      if (!isLoading && !isAuthenticated) {
-        router.push("/login");
-      }
-    },
-    [isAuthenticated, isLoading, router, token]
-  );
+    checkToken();
+  }, [token]);
+
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      router.push("/login");
+    }
+  }, [isLoading, isAuthenticated, router]);
+
+  useEffect(() => {
+    setProntuarios(
+      pacientes.filter(registro => registro.tipo === "Ficha Médica")
+    );
+  }, []);
 
   if (isLoading) {
     return (

@@ -2,7 +2,7 @@
 "use client";
 
 import Preview from "@/components/cards/CardPreview";
-import MainLayout from "@/components/layouts/MainLayout";
+import MainLayout from  "@/ui/layouts/MainLayout";
 import useAuthCookie from "@/hooks/cookies";
 import { pacientes } from "@/mock/registros";
 import { useRouter } from "next/navigation";

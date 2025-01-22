@@ -3,12 +3,12 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import Drawer from "../Drawer";
 import searchIcon from "@/icons/search_icon.svg";
 import { FaSquarePlus } from "react-icons/fa6";
 import CriacaoFicha from "../create/CriacaoFicha";
 import CriacaoProntuario from "../create/CriacaoProntuario";
 import { MdOutlineMenu } from "react-icons/md";
+import Drawer from "../components/Drawer";
 interface navBarProps {
   nome: string;
 }
