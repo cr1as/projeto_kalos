@@ -1,14 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useEffect, useState } from "react";
-import searchIcon from "@/icons/search_icon.svg";
 import { FaSquarePlus } from "react-icons/fa6";
 import CriacaoFicha from "../create/CriacaoFicha";
 import CriacaoProntuario from "../create/CriacaoProntuario";
 import { MdOutlineMenu } from "react-icons/md";
 import Drawer from "../components/Drawer";
+import { IoSearch } from "react-icons/io5";
 interface navBarProps {
   nome: string;
 }
@@ -34,20 +33,21 @@ const NavBar: React.FC<navBarProps> = ({ nome }) => {
     setCriar(false);
   };
 
-  useEffect(() => {
-    if (nome === "Prontuários") setType(true);
-    else setType(false);
-    return () => {
-      closeDrawer();
-    };
-  }, [nome]);
+  useEffect(
+    () => {
+      if (nome === "Prontuários") setType(true);
+      else setType(false);
+      return () => {
+        closeDrawer();
+      };
+    },
+    [nome]
+  );
 
   const Render: React.FC = () => {
-    return type ? (
-      <CriacaoProntuario isOpen={criar} onClose={fecharProntuario} />
-    ) : (
-      <CriacaoFicha isOpen={criar} onClose={fecharProntuario} />
-    );
+    return type
+      ? <CriacaoProntuario isOpen={criar} onClose={fecharProntuario} />
+      : <CriacaoFicha isOpen={criar} onClose={fecharProntuario} />;
   };
 
   return (
@@ -55,7 +55,7 @@ const NavBar: React.FC<navBarProps> = ({ nome }) => {
       <div className="w-1/2 h-full flex">
         <div className="w-1/4 h-full flex justify-center items-center">
           <button onClick={openDrawer}>
-          <MdOutlineMenu size={40}/>
+            <MdOutlineMenu size={40} />
           </button>
         </div>
         <Drawer isOpen={isDrawerOpen} onClose={closeDrawer} />
@@ -81,13 +81,7 @@ const NavBar: React.FC<navBarProps> = ({ nome }) => {
         <Render />
         <div className="m-10 flex items-center border border-black rounded-full w-[25rem] overflow-hidden">
           <div className="p-2">
-            <Image
-              alt="search icon"
-              src={searchIcon}
-              width={35}
-              height={35}
-              className="text-[#114238]"
-            />
+            <IoSearch size={26} color="#207865"/>
           </div>
           <input
             type="text"
