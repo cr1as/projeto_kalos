@@ -1,12 +1,13 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 
-import Preview from "@/components/cards/CardPreview";
+
 import MainLayout from  "@/ui/layouts/MainLayout";
 import useAuthCookie from "@/lib/hooks/cookies";
 import { pacientes } from "@/lib/mock/registros";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import Preview from "@/ui/cards/CardPreview";
 
 interface Paciente {
   uid: number;
