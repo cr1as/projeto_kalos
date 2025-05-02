@@ -1,290 +1,175 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { MdClose } from "react-icons/md";
+import ToggleButton from "../components/Togglebutton";
 
-interface cardEdicaoProps {
-  isOpen: boolean;
-  onClose: () => void;
+// Dados do formulário de edição de prontuário
+export interface ProntuarioEditData {
   nome: string;
-  idade: string;
+  idade: number;
   genero: string;
   telefone: string;
-  peso: string;
-  altura: string;
-  especificacoesAdicionais?: string;
-  rua: string;
-  numero: string;
-  cidade: string;
-  bairro: string;
-  ativo?: boolean;
-  medicacoes?: string[];
-  procedimento?: string[];
-  resultados?: string[];
-  diagnostico?: string[];
-  doencas?: string[];
+  peso: number;
+  altura: number;
+  ativo: boolean;
+  procedimento: string[];
+  resultados: string[];
+  medicacoes: string[];
+  diagnostico: string[];
+  doencas: string[];
 }
 
-const CardEdicao: React.FC<cardEdicaoProps> = ({
-  isOpen,
-  onClose,
-  nome,
-  idade,
-  genero,
-  telefone,
-  peso,
-  altura,
-  medicacoes,
-  procedimento,
-  resultados,
-  diagnostico,
-  doencas
-}) => {
-  const [isVisible, setIsVisible] = useState(isOpen);
-  const [isAnimating, setIsAnimating] = useState(false);
+interface CardEdicaoProps {
+  isOpen: boolean;
+  onClose: () => void;
+  initialData: ProntuarioEditData;
+  onSave: (data: ProntuarioEditData) => void;
+}
 
-  useEffect(
-    () => {
-      if (isOpen) {
-        setIsVisible(true);
-        setTimeout(() => {
-          setIsAnimating(true);
-        }, 10);
-      } else {
-        setIsAnimating(false);
-        setTimeout(() => {
-          setIsVisible(false);
-        }, 10);
+const CardEdicaoProntuario: React.FC<CardEdicaoProps> = ({ isOpen, onClose, initialData, onSave }) => {
+  const [visible, setVisible] = useState(isOpen);
+  const [animating, setAnimating] = useState(false);
+  const [form, setForm] = useState<ProntuarioEditData>(initialData);
+
+  // Controle de abertura/fechamento com animação
+  useEffect(() => {
+    if (isOpen) {
+      setVisible(true);
+      requestAnimationFrame(() => setAnimating(true));
+    } else {
+      setAnimating(false);
+      const timer = setTimeout(() => setVisible(false), 300);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
+
+  // Sincroniza valores iniciais ao abrir
+  useEffect(() => {
+    if (isOpen) setForm(initialData);
+  }, [initialData, isOpen]);
+
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>, index?: number, field?: keyof ProntuarioEditData) => {
+    const { name, value, type } = e.target;
+    setForm(prev => {
+      // Arrays de strings
+      if (field && typeof index === 'number') {
+        const arr = [...(prev[field] as string[])];
+        arr[index] = value;
+        return { ...prev, [field]: arr } as ProntuarioEditData;
       }
-    },
-    [isOpen]
-  );
+      // Outros campos
+      return ({
+        ...prev,
+        [name]: type === 'number' ? Number(value) : value
+      } as unknown as ProntuarioEditData);
+    });
+  }, []);
+
+  const handleToggle = useCallback(() => {
+    setForm(prev => ({ ...prev, ativo: !prev.ativo }));
+  }, []);
+
+  const handleSubmit = useCallback((e: React.FormEvent) => {
+    e.preventDefault();
+    onSave(form);
+  }, [form, onSave]);
+
+  if (!visible) return null;
 
   return (
-    <div
-      className={`fixed inset-0 z-0 flex items-center justify-center ${isVisible
-        ? "block"
-        : "hidden"}`}
-    >
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      {/* Overlay */}
       <div
-        className={`absolute inset-0  bg-white/50 transition-opacity duration-300 ease-in-out ${isAnimating
-          ? "opacity-100"
-          : "opacity-0"}`}
-        aria-hidden="true"
+        className={`absolute inset-0 bg-black bg-opacity-50 transition-opacity duration-300 ${animating ? 'opacity-100' : 'opacity-0'}`}
         onClick={onClose}
+        aria-hidden="true"
       />
+
+      {/* Modal */}
       <div
-        className={`relative h-[40rem] overflow-auto w-[80rem] bg-[#A3D6CB]  border-2 rounded-[3px] border-[#114238] shadow-xl transition-transform duration-300 ease-in-out ${isAnimating
-          ? ""
-          : ""}`}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="edicao-prontuario-title"
+        className={`relative bg-[#A3D6CB] rounded-lg shadow-lg w-full max-w-5xl p-6 transform transition-transform duration-300 ${animating ? 'scale-100' : 'scale-95'}`}
       >
-        <div className="p-4 w-full h-full ">
-          <div className="w-full h-full overflow-auto">
-            <header className="w-full flex justify-between items-center gap-4">
-              <article className="flex gap-4">
-                <button className="text-black" onClick={onClose}>
-                  <MdClose size={40} />
-                </button>
-                <h1 className="text-5xl text-[#114238]">PRONTUÁRIO</h1>
-              </article>
+        <form onSubmit={handleSubmit} className="space-y-6 overflow-auto max-h-[90vh]">
+          <header className="flex items-center justify-between">
+            <h2 id="edicao-prontuario-title" className="text-3xl font-semibold text-[#114238]">Editar Prontuário</h2>
+            <button type="button" onClick={onClose} aria-label="Fechar modal" className="text-black hover:text-gray-700">
+              <MdClose size={28} />
+            </button>
+          </header>
 
-              <button className="text-black" onClick={onClose}>
-                <div>
-                  <div className="bg-[#207865] w-44 h-12 rounded-full flex justify-center items-center text-white text-2xl">
-                    Cadastrar
-                  </div>
-                </div>
-              </button>
-            </header>
-            <article className="flex justify-center text-black">
-              <div className="w-11/12 flex flex-col ">
-                <article className="flex flex-col">
-                  <label className="text-xl font-normal">Nome</label>
-                  <input
-                    type="text"
-                    className="h-14 w-full"
-                    placeholder={nome}
-                  />
-                </article>
-                <article className="flex">
-                  <div className="w-1/2 flex flex-col">
-                    <label className="text-xl font-normal">Idade</label>
-                    <input
-                      type="text"
-                      className="h-14 w-11/12"
-                      placeholder={idade}
-                    />
-                  </div>
-                  <div className="w-1/2 flex flex-col">
-                    <label className="text-xl font-normal">Gênero</label>
-                    <input
-                      type="text"
-                      className="h-14 w-full"
-                      placeholder={genero}
-                    />
-                  </div>
-                </article>
-                <article className="flex">
-                  <div className="flex w-1/2">
-                    <div className="w-1/2 flex flex-col">
-                      <label className="text-xl font-normal">Peso</label>
-                      <input
-                        type="text"
-                        className="h-14 w-11/12"
-                        placeholder={peso}
-                      />
-                    </div>
-                    <div className="w-1/2 flex flex-col">
-                      <label className="text-xl font-normal">Altura</label>
-                      <input
-                        type="text"
-                        className="h-14 w-11/12"
-                        placeholder={altura}
-                      />
-                    </div>
-                  </div>
-                  <div className="w-1/2 flex flex-col">
-                    <label className="text-xl font-normal">Telefone</label>
-                    <input
-                      type="text"
-                      className="h-14 w-full"
-                      placeholder={telefone}
-                    />
-                  </div>
-                </article>
-
-                {/*
-                ! - - - - - - - - - -
-                */}
-                <section className="flex flex-col gap-8 w-full" id="exames">
-                  <h2 className="text-4xl font-medium text-[#114238]">
-                    Exames Realizados
-                  </h2>
-                  <table className="w-full border-2 border-black bg-white">
-  <thead>
-    <tr>
-      <th className="w-1/2">Nome do procedimento</th>
-      <th className="w-1/2">Resultado</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td className="border-2 border-black p-4">
-        {/* Coluna de Procedimento */}
-        <div className="flex flex-col space-y-2">
-          {procedimento && procedimento.length > 0
-            ? procedimento.map((item, index) => (
-                item && (
-                  <input
-                    key={index}
-                    className="p-2 border border-gray-400 rounded-md"
-                    placeholder={item}
-                  />
-                )
-              ))
-            : <p>Sem procedimentos registrados...</p>}
-        </div>
-      </td>
-      <td className="border-2 border-black p-4">
-        {/* Coluna de Resultados */}
-        <div className="flex flex-col space-y-2">
-          {resultados && resultados.length > 0
-            ? resultados.map((item, index) => (
-                item && (
-                  <input
-                    key={index}
-                    className="p-2 border border-gray-400 rounded-md"
-                    placeholder={item}
-                  />
-                )
-              ))
-            : <p>Sem resultados registrados...</p>}
-        </div>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-                  {/*
-                ! - - - - - - - - - -
-                */}
-                  <div className="border-b border-2 border-[#1F6657] w-full" />
-                  <section className="flex flex-col gap-8 w-full" id="exames">
-                    <h2 className="text-4xl font-medium text-[#114238]">
-                      Processos
-                    </h2>
-                    <table className="w-full border-2 border-black bg-white">
-  <thead>
-    <tr>
-      <th className="w-1/4">Medicações</th>
-      <th className="w-1/4">Diagnóstico</th>
-      <th className="w-2/4">Doenças</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td className="border-2 border-black p-4">
-        {/* Coluna de Medicações */}
-        <div className="flex flex-col space-y-2">
-          {medicacoes && medicacoes.length > 0
-            ? medicacoes.map((item, index) => (
-                item && (
-                  <input
-                    key={index}
-                    className="p-2 border border-gray-400 rounded-md"
-                    placeholder={item}
-                  />
-                )
-              ))
-            : <p className="text-gray-500">Nenhuma medicação registrada</p>}
-        </div>
-      </td>
-      <td className="border-2 border-black p-4">
-        {/* Coluna de Diagnóstico */}
-        <div className="flex flex-col space-y-2">
-          {diagnostico && diagnostico.length > 0
-            ? diagnostico.map((item, index) => (
-                item && (
-                  <input
-                    key={index}
-                    className="p-2 border border-gray-400 rounded-md"
-                    placeholder={item}
-                  />
-                )
-              ))
-            : <p className="text-gray-500">Nenhum diagnóstico registrado</p>}
-        </div>
-      </td>
-      <td className="border-2 border-black p-4">
-        {/* Coluna de Doenças */}
-        <div className="flex flex-col space-y-2">
-          {doencas && doencas.length > 0
-            ? doencas.map((item, index) => (
-                item && (
-                  <input
-                    key={index}
-                    className="p-2 border border-gray-400 rounded-md"
-                    placeholder={item}
-                  />
-                )
-              ))
-            : <p className="text-gray-500">Nenhuma doença registrada</p>}
-        </div>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-
-                  </section>
-                </section>
+          {/* Informações básicas e toggle */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {['nome','idade','genero','telefone','peso','altura'].map((key) => (
+              <div key={key} className="flex flex-col">
+                <label htmlFor={key} className="text-lg font-medium text-gray-800 capitalize">{key}</label>
+                <input
+                  id={key}
+                  name={key}
+                  type={['idade','peso','altura'].includes(key) ? 'number' : 'text'}
+                  value={(form as any)[key]}
+                  onChange={handleChange as any}
+                  className="mt-1 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#207865]"
+                  required
+                />
               </div>
-            </article>
+            ))}
+            <div className="flex flex-col items-center py-4">
+              <label className="text-lg font-medium text-gray-800 mb-2">Ativo</label>
+              <ToggleButton ativo={form.ativo} onToggle={handleToggle} />
+            </div>
           </div>
-        </div>
+
+          {/* Tabelas de procedimentos, resultados etc */}
+          {(['procedimento','resultados','medicacoes','diagnostico','doencas'] as (keyof ProntuarioEditData)[]).map((field) => (
+            <section key={field} className="space-y-2">
+              <h3 className="text-2xl font-medium text-[#114238] capitalize">{field}</h3>
+              <table className="w-full border-collapse bg-white">
+                <thead>
+                  <tr>
+                    <th className="border p-2">Item</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(form[field] as string[]).map((item, idx) => (
+                    <tr key={idx}>
+                      <td className="border p-2">
+                        <input
+                          type="text"
+                          value={item}
+                          onChange={(e) => handleChange(e, idx, field)}
+                          className="w-full p-1 border rounded focus:outline-none focus:ring-2 focus:ring-[#207865]"
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </section>
+          ))}
+
+          <footer className="flex justify-end space-x-4">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 bg-white border border-gray-300 rounded hover:bg-gray-100"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              className="px-6 py-2 bg-[#207865] text-white rounded hover:bg-[#1a6b57] focus:ring-2 focus:ring-offset-2 focus:ring-[#145a43]"
+            >
+              Salvar
+            </button>
+          </footer>
+        </form>
       </div>
     </div>
   );
 };
 
-export default CardEdicao;
+export default CardEdicaoProntuario;

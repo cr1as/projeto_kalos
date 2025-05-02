@@ -1,212 +1,128 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { MdClose } from "react-icons/md";
 
-interface CardCriacaoProps {
+interface EdicaoFichaProps {
   isOpen: boolean;
   onClose: () => void;
+  onSave: (data: FichaFormData) => void;
+  initialData: FichaFormData;
+}
+
+export interface FichaFormData {
   nome: string;
-  idade: string;
+  idade: number;
   genero: string;
   telefone: string;
-  peso: string;
-  altura: string;
-  especificacoesAdicionais?: string;
+  peso: number;
+  altura: number;
   rua: string;
   numero: string;
   cidade: string;
   bairro: string;
+  observacoes?: string;
 }
 
-const EdicaoFicha: React.FC<CardCriacaoProps> = ({
-  isOpen,
-  onClose,
-  nome,
-  idade,
-  genero,
-  telefone,
-  peso,
-  altura,
-  especificacoesAdicionais,
-  rua,
-  numero,
-  cidade,
-  bairro
-}) => {
-  const [isVisible, setIsVisible] = useState(isOpen);
-  const [isAnimating, setIsAnimating] = useState(false);
+const EdicaoFicha: React.FC<EdicaoFichaProps> = ({ isOpen, onClose, onSave, initialData }) => {
+  const [visible, setVisible] = useState(isOpen);
+  const [animating, setAnimating] = useState(false);
+  const [form, setForm] = useState<FichaFormData>(initialData);
 
-  useEffect(
-    () => {
-      if (isOpen) {
-        setIsVisible(true);
-        setTimeout(() => {
-          setIsAnimating(true);
-        }, 10);
-      } else {
-        setIsAnimating(false);
-        setTimeout(() => {
-          setIsVisible(false);
-        }, 10);
-      }
-    },
-    [isOpen]
-  );
+  // Sync open/close with animation
+  useEffect(() => {
+    if (isOpen) {
+      setVisible(true);
+      requestAnimationFrame(() => setAnimating(true));
+    } else {
+      setAnimating(false);
+      const timer = setTimeout(() => setVisible(false), 300);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
 
-  const cadastrar = () => {
-    onClose();
-  };
+  // Reset form when initialData changes
+  useEffect(() => {
+    if (isOpen) setForm(initialData);
+  }, [initialData, isOpen]);
 
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type } = e.target;
+    setForm(prev => ({
+      ...prev,
+      [name]: type === 'number' ? Number(value) : value
+    } as unknown as FichaFormData));
+  }, []);
+
+  const handleSubmit = useCallback((e: React.FormEvent) => {
+    e.preventDefault();
+    onSave(form);
+  }, [form, onSave]);
+
+  if (!visible) return null;
 
   return (
-    <div
-      className={`fixed inset-0 z-0 flex items-center justify-center ${isVisible
-        ? "block"
-        : "hidden"}`}
-    >
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      {/* Overlay */}
       <div
-        className={`absolute inset-0 bg-white/50 transition-opacity duration-300 ease-in-out ${isAnimating
-          ? "opacity-100"
-          : "opacity-0"}`}
+        className={`absolute inset-0 bg-black bg-opacity-50 transition-opacity duration-300 ${animating ? 'opacity-100' : 'opacity-0'}`}
+        onClick={onClose}
         aria-hidden="true"
       />
+
+      {/* Modal */}
       <div
-        className={`relative h-11/12 w-[80rem] bg-[#A3D6CB]  border-2 rounded-[3px] border-[#114238] shadow-xl transition-transform duration-300 ease-in-out ${isAnimating
-          ? ""
-          : ""}`}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="edicao-ficha-title"
+        className={`relative bg-[#A3D6CB] rounded-lg shadow-xl w-full max-w-4xl transform transition-transform duration-300 ${animating ? 'scale-100' : 'scale-95'}`}
       >
-        <div className="p-4 w-full h-full">
-          <div className="w-full h-full">
-            <header className="w-full flex justify-between items-center gap-4">
-              <article className="flex gap-4">
-                <button
-                  className="text-black"
-                  onClick={() => {
-                    console.log("X");
-                    onClose();
-                  }}
-                  >
-                  <MdClose size={40} />
-                </button>
-                <h1 className="text-5xl text-[#114238]">FICHA MÉDICA</h1>
-              </article>
-              <button className="text-black" 
-              onClick={ () => { cadastrar()
-                console.log("CADASTRA");
-                onClose();
-              }}
-              >
-                <div>
-                  <div className="bg-[#207865] w-44 h-12 rounded-full flex justify-center items-center text-white text-2xl">
-                  
-                    Cadastrar
-                  </div>
+        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+          <header className="flex items-center justify-between">
+            <h2 id="edicao-ficha-title" className="text-3xl font-semibold text-[#114238]">Editar Ficha Médica</h2>
+            <button type="button" onClick={onClose} aria-label="Fechar modal" className="text-black hover:text-gray-700">
+              <MdClose size={28} />
+            </button>
+          </header>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {Object.entries(form).map(([key, value]) => {
+              // Skip observacoes field label logic
+              const label = key === 'observacoes' ? 'Observações' : key.charAt(0).toUpperCase() + key.slice(1);
+              const type = key === 'idade' || key === 'peso' || key === 'altura' ? 'number' : 'text';
+
+              return (
+                <div key={key} className="flex flex-col">
+                  <label htmlFor={key} className="text-lg font-medium text-gray-800">{label}</label>
+                  <input
+                    id={key}
+                    name={key}
+                    type={type}
+                    value={value as any}
+                    onChange={handleChange}
+                    className="mt-1 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#207865]"
+                  />
                 </div>
-              </button>
-            </header>
-            <article className="flex justify-center">
-              <div className="w-11/12 flex flex-col ">
-                <article className="flex flex-col">
-                  <label className="text-xl font-normal">Nome</label>
-                  <input type="text" className="h-14 w-full" placeholder={nome} />
-                </article>
-                <article className="flex">
-                  <div className="w-1/2 flex flex-col">
-                    <label className="text-xl font-normal">Idade</label>
-                    <input
-                      type="text"
-                      className="h-14 w-11/12"
-                      placeholder={idade}
-                    />
-                  </div>
-                  <div className="w-1/2 flex flex-col">
-                    <label className="text-xl font-normal">Gênero</label>
-                    <input
-                      type="text"
-                      className="h-14 w-full"
-                      placeholder={genero}
-                    />
-                  </div>
-                </article>
-                <article className="flex">
-                  <div className="flex w-1/2">
-                    <div className="w-1/2 flex flex-col">
-                      <label className="text-xl font-normal">Peso</label>
-                      <input
-                        type="text"
-                        className="h-14 w-11/12"
-                        placeholder={peso}
-                      />
-                    </div>
-                    <div className="w-1/2 flex flex-col">
-                      <label className="text-xl font-normal">Altura</label>
-                      <input
-                        type="text"
-                        className="h-14 w-11/12"
-                        placeholder={altura}
-                      />
-                    </div>
-                  </div>
-                  <div className="w-1/2 flex flex-col">
-                    <label className="text-xl font-normal">Telefone</label>
-                    <input
-                      type="text"
-                      className="h-14 w-full"
-                      placeholder={telefone}
-                    />
-                  </div>
-                </article>
-                <article>
-                  <h2 className="text-3xl font-medium my-4">Endereço</h2>
-                </article>
-                <article className="flex">
-                  <div className="w-3/4 flex flex-col">
-                    <label className="text-xl font-normal">Rua</label>
-                    <input type="text" className="h-14 w-11/12" placeholder={rua} />
-                  </div>
-                  <div className="w-1/4 flex flex-col">
-                    <label className="text-xl font-normal">Número</label>
-                    <input
-                      type="text"
-                      className="h-14 w-full"
-                      placeholder={numero}
-                    />
-                  </div>
-                </article>
-                <article className="flex">
-                  <div className="w-2/3 flex flex-col">
-                    <label className="text-xl font-normal">Cidade</label>
-                    <input
-                      type="text"
-                      className="h-14 w-11/12"
-                      placeholder={cidade}
-                    />
-                  </div>
-                  <div className="w-1/3 flex flex-col">
-                    <label className="text-xl font-normal">Bairro</label>
-                    <input
-                      type="text"
-                      className="h-14 w-full"
-                      placeholder={bairro}
-                    />
-                  </div>
-                  <div />
-                </article>
-                <article>
-                  <div className="w-full">
-                    <label className="text-xl font-normal">Observações</label>
-                    <input
-                      type="text"
-                      className="h-14 w-full"
-                      placeholder={especificacoesAdicionais}
-                    />
-                  </div>
-                </article>
-              </div>
-            </article>
+              );
+            })}
           </div>
-        </div>
+
+          <footer className="flex justify-end space-x-4">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 bg-white border border-gray-300 rounded hover:bg-gray-100"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              className="px-6 py-2 bg-[#207865] text-white rounded hover:bg-[#1a6b57] focus:ring-2 focus:ring-offset-2 focus:ring-[#145a43]"
+            >
+              Salvar
+            </button>
+          </footer>
+        </form>
       </div>
     </div>
   );

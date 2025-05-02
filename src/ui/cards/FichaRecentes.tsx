@@ -34,13 +34,8 @@ const FichaRecentes: React.FC<FichaRecentesProps> = ({
 }) => {
   const [view, setView] = useState(false);
 
-  const openView = useCallback(() => {
-    setView(true);
-  }, []);
-
-  const closeView = useCallback(() => {
-    setView(false);
-  }, []);
+  const openView = useCallback(() => setView(true), []);
+  const closeView = useCallback(() => setView(false), []);
 
   return (
     <div className="text-start">

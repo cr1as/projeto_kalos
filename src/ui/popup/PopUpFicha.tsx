@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { MdClose } from "react-icons/md";
 
-
-interface ViewProps {
+export interface ViewFichaProps {
   isOpen: boolean;
   onClose: () => void;
   tipo: string;
@@ -21,147 +20,127 @@ interface ViewProps {
   bairro: string;
 }
 
-const ViewFichaRecentes: React.FC<ViewProps> = ({
+const ViewFicha: React.FC<ViewFichaProps> = ({
   isOpen,
   onClose,
   tipo,
-  altura,
-  bairro,
-  cidade,
-  genero,
-  idade,
   nome,
-  numero,
+  idade,
+  genero,
+  altura,
   peso,
-  rua,
   telefone,
-  especificacoesAdicionais
+  rua,
+  numero,
+  cidade,
+  bairro,
+  especificacoesAdicionais,
 }) => {
+  const [visible, setVisible] = useState(isOpen);
+  const [animating, setAnimating] = useState(false);
 
+  // Sync modal visibility
+  useEffect(() => {
+    if (isOpen) {
+      setVisible(true);
+      requestAnimationFrame(() => setAnimating(true));
+    } else {
+      setAnimating(false);
+      const timer = setTimeout(() => setVisible(false), 300);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
 
-  const [isVisible, setIsVisible] = useState(isOpen);
-  const [isAnimating, setIsAnimating] = useState(false);
+  const handleClose = useCallback(() => {
+    setAnimating(false);
+    setTimeout(onClose, 300);
+  }, [onClose]);
 
-
-  useEffect(
-    () => {
-      if (isOpen) {
-        setIsVisible(true);
-        setTimeout(() => {
-          setIsAnimating(true);
-        }, 10);
-      } else {
-        setIsAnimating(false);
-        setTimeout(() => {
-          setIsVisible(false);
-        }, 300);
-      }
-    },
-    [isOpen]
-  );
+  if (!visible) return null;
 
   return (
-    <div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      {/* Overlay */}
       <div
-        className={`fixed inset-0 z-0 flex items-center justify-center ${isVisible
-          ? "block"
-          : "hidden"}`}
-        role="dialog"
-        aria-labelledby="medical-record-title"
-        aria-hidden={!isVisible}
-      />
-      <div
-        className={`absolute inset-0 bg-black/15 transition-opacity duration-300 ease-in-out justify-center items-center flex ${isAnimating
-          ? "opacity-100"
-          : "opacity-0"}`}
+        className={`absolute inset-0 bg-black bg-opacity-50 transition-opacity duration-300 ${animating ? 'opacity-100' : 'opacity-0'}`}
+        onClick={handleClose}
         aria-hidden="true"
+      />
+
+      {/* Dialog */}
+      <article
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="view-ficha-title"
+        className={`relative bg-[#A3D6CB] rounded-lg shadow-lg w-full max-w-3xl transform transition-transform duration-300 overflow-hidden ${animating ? 'scale-100' : 'scale-95'}`}
       >
-        <article
-          className="relative h-[40rem] w-[70rem] overflow-auto bg-[#A3D6CB] border-2 rounded-[3px] border-[#114238] shadow-xl transition-transform duration-300 ease-in-out"
-        >
-        <section className="p-8 w-full h-full">
-          <header className="w-full">
-            <header className="flex h-12 w-full justify-between items-center">
-              <h1
-                className="text-5xl font-bold text-[#114238]"
-              >
-                {tipo}
-              </h1>
-              <button
-                onClick={() => {
-                  onClose();
-                }}
-                className="text-black"
-              >
-                <MdClose size={40} />
-              </button>
-            </header>
-          </header>
-          <main className="w-full h-full text-2xl text-black">
-            <section className="my-6">
-              <div className="text-4xl ">
-                <p>
-                  <strong>Nome do paciente:</strong> {nome}
-                </p>
-                <p>
-                  <strong>Idade:</strong> {idade}
-                </p>
-                <p>
-                  <strong>Gênero:</strong> {genero}
-                </p>
-                <p>
-                  <strong>Altura:</strong> {altura}
-                </p>
-                <p>
-                  <strong>Peso:</strong> {peso}
-                </p>
-                <p>
-                  <strong>Telefone:</strong> {telefone}
-                </p>
-              </div>
-            </section>
+        <header className="flex items-center justify-between p-4 border-b border-gray-300">
+          <h2 id="view-ficha-title" className="text-3xl font-semibold text-[#114238]">
+            {tipo}
+          </h2>
+          <button
+            onClick={handleClose}
+            aria-label="Fechar"
+            className="text-gray-800 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#207865]"
+          >
+            <MdClose size={28} />
+          </button>
+        </header>
 
-            <div className="w-full border-b border-black my-4" />
+        <div className="p-6 space-y-6 overflow-y-auto max-h-[80vh] text-lg text-gray-800">
+          {/* Dados Pessoais */}
+          <section className="space-y-2">
+            <h3 className="text-2xl font-medium text-[#114238]">Dados do Paciente</h3>
+            <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
+              {[
+                ['Nome', nome],
+                ['Idade', idade],
+                ['Gênero', genero],
+                ['Altura', `${altura}`],
+                ['Peso', `${peso}`],
+                ['Telefone', telefone],
+              ].map(([label, value]) => (
+                <React.Fragment key={label as string}>
+                  <dt className="font-medium">{label}</dt>
+                  <dd>{value || '—'}</dd>
+                </React.Fragment>
+              ))}
+            </dl>
+          </section>
 
-            <section>
-              <h2 className="text-4xl font-bold text-[#114238]">Endereço</h2>
-              <div className="text-4xl grid grid-cols-2 gap-4 my-6">
-                <p>
-                  <strong>Cidade:</strong> {cidade}
-                </p>
-                <p>
-                  <strong>Bairro:</strong> {bairro}
-                </p>
-                <p>
-                  <strong>Rua:</strong> {rua}
-                </p>
-                <p>
-                  <strong>Número:</strong> {numero}
-                </p>
-              </div>
-            </section>
+          {/* Endereço */}
+          <section className="space-y-2">
+            <h3 className="text-2xl font-medium text-[#114238]">Endereço</h3>
+            <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
+              {[
+                ['Cidade', cidade],
+                ['Bairro', bairro],
+                ['Rua', rua],
+                ['Número', numero],
+              ].map(([label, value]) => (
+                <React.Fragment key={label as string}>
+                  <dt className="font-medium">{label}</dt>
+                  <dd>{value || '—'}</dd>
+                </React.Fragment>
+              ))}
+            </dl>
+          </section>
 
-            <div className="w-full border-b border-black my-4" />
-
-            <section>
-              <h2 className=" text-[#114238] text-4xl font-bold">Observações do paciente:</h2>
-              <div className="h-16 bg-white p-4 my-5 shadow-xl border-2 border-black/50">
-              {especificacoesAdicionais ?
-                <p>
-                  {especificacoesAdicionais}
-                </p>
-                :
-                <>
-                </>
-                }
-                </div>
-            </section>
-          </main>
-        </section>
+          {/* Observações */}
+          <section className="space-y-2">
+            <h3 className="text-2xl font-medium text-[#114238]">Observações</h3>
+            <div className="p-4 bg-white rounded shadow-inner h-32 overflow-auto">
+              {especificacoesAdicionais ? (
+                <p>{especificacoesAdicionais}</p>
+              ) : (
+                <p className="text-gray-500">Nenhuma observação fornecida.</p>
+              )}
+            </div>
+          </section>
+        </div>
       </article>
-    </div>
     </div>
   );
 };
 
-export default ViewFichaRecentes;
+export default ViewFicha;

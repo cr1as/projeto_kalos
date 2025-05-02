@@ -1,4 +1,4 @@
-'use client'
+"use client"
 import { useCallback, useEffect, useState } from "react";
 import { BsEye } from "react-icons/bs";
 import { RiEditBoxLine } from "react-icons/ri";
@@ -48,10 +48,7 @@ const Preview: React.FC<PreviewProps> = ({
   procedimento,
   resultados,
   doencas,
-  
 }) => {
-
-
   //! VARIÁVEIS DO COMPONENTE
   const [isActived, setActived] = useState("");
   const isAtivoPresent = ativo !== undefined;
@@ -67,28 +64,15 @@ const Preview: React.FC<PreviewProps> = ({
   const [view, setView] = useState(false);
   const [edit, setEdit] = useState(false);
 
-
   //!FUNÇÕES DO MODAL
-  const openView = useCallback(() => {
-    setView(true);
-  }, []);
-
-  const closeView = useCallback(() => {
-    setView(false);
-  }, []);
-
-  const openEdit = useCallback(() => {
-    setEdit(true);
-  }, []);
-
-  const closeEdit = useCallback(() => {
-    setEdit(false);
-  }, []);
+  const openView = useCallback(() => setView(true), []);
+  const closeView = useCallback(() => setView(false), []);
+  const openEdit = useCallback(() => setEdit(true), []);
+  const closeEdit = useCallback(() => setEdit(false), []);
 
   //!RENDER
   return (
-    <article 
-    className="border-[1px] rounded-[3px] gap-4 border-[#207865] w-[42rem] h-56 bg-[#A3D6CB] duration-300 hover:shadow-lg shadow-black p-4 flex flex-row">
+    <article className="border-[1px] rounded-[3px] gap-4 border-[#207865] w-[42rem] h-56 bg-[#A3D6CB] duration-300 hover:shadow-lg shadow-black p-4 flex flex-row">
       <section className="flex flex-col gap-2 w-1/2">
         <p className="text-[#1F6657] text-3xl">{tipo}</p>
         <p className="text-2xl">Nome: {nome}</p>
@@ -110,109 +94,107 @@ const Preview: React.FC<PreviewProps> = ({
                     Status: <span className="text-[#962E15]"> {isActived} </span>
                   </p>
                 )}
-            <div className="h-full border-l-[3px] border-[#1F6657]" />
+                <div className="h-full border-l-[3px] border-[#1F6657]" />
               </>
             )}
             <button
               className="h-14 w-14 bg-transparent hover:bg-[#1F6657]/50 duration-200 rounded-full flex justify-center items-center"
-              onClick={() => {openView()}}
+              onClick={openView}
               aria-label="Visualizar detalhes"
             >
               <BsEye color="#114238" size={40} />
             </button>
             {view && (
-              <>
-              { tipo === "Prontuário" ? 
-                <PopUpProntuario 
-                tipo={tipo}
-                altura={altura}
-                peso={peso}
-                telefone={telefone}
-                rua={rua}
-                numero={numero}
-                cidade={cidade}
-                bairro={bairro}
-                especificacoesAdicionais={especificacoesAdicionais}
-                isOpen={view}
-                onClose={() => {closeView()}}
-                nome={nome}
-                idade={idade}
-                genero={genero}
-                ativo={ativo}
-                medicacoes={medicacoes}
-                diagnostico={diagnostico}
-                procedimento={procedimento}
-                resultados={resultados}
-                doencas={doencas}
+              tipo === "Prontuário" ? (
+                <PopUpProntuario
+                  tipo={tipo}
+                  altura={altura}
+                  peso={peso}
+                  telefone={telefone}
+                  rua={rua}
+                  numero={numero}
+                  cidade={cidade}
+                  bairro={bairro}
+                  especificacoesAdicionais={especificacoesAdicionais}
+                  isOpen={view}
+                  onClose={closeView}
+                  nome={nome}
+                  idade={idade}
+                  genero={genero}
+                  ativo={ativo}
+                  medicacoes={medicacoes}
+                  diagnostico={diagnostico}
+                  procedimento={procedimento}
+                  resultados={resultados}
+                  doencas={doencas}
                 />
-                :
+              ) : (
                 <PopUpFicha
-                tipo={tipo}
-                altura={altura}
-                peso={peso}
-                telefone={telefone}
-                rua={rua}
-                numero={numero}
-                cidade={cidade}
-                bairro={bairro}
-                especificacoesAdicionais={especificacoesAdicionais}
-                isOpen={view}
-                onClose={() => {closeView()}}
-                nome={nome}
-                idade={idade}
-                genero={genero}
+                  tipo={tipo}
+                  altura={altura}
+                  peso={peso}
+                  telefone={telefone}
+                  rua={rua}
+                  numero={numero}
+                  cidade={cidade}
+                  bairro={bairro}
+                  especificacoesAdicionais={especificacoesAdicionais}
+                  isOpen={view}
+                  onClose={closeView}
+                  nome={nome}
+                  idade={idade}
+                  genero={genero}
                 />
-              }
-              </>
+              )
             )}
             <div className="h-full border-l-[3px] border-[#1F6657]" />
             <div
               className="h-14 w-14 bg-transparent hover:bg-[#1F6657]/50 duration-200 rounded-full flex justify-center items-center"
               aria-label="Editar detalhes"
-              onClick={() => {openEdit()}}
+              onClick={openEdit}
             >
               <RiEditBoxLine color="#114238" size={40} />
             </div>
             {edit && (
-                  tipo === "Prontuário" ?
-                    <EdicaoProntuario 
-                      altura={altura}
-                      peso={peso}
-                      telefone={telefone}
-                      rua={rua}
-                      numero={numero}
-                      cidade={cidade}
-                      bairro={bairro}
-                      especificacoesAdicionais={especificacoesAdicionais}
-                      isOpen={edit}
-                      onClose={() => {closeEdit()}}
-                      nome={nome}
-                      idade={idade}
-                      genero={genero}
-                      diagnostico={diagnostico}
-                      medicacoes={medicacoes}
-                      procedimento={procedimento}
-                      resultados={resultados}
-                      doencas={doencas}
-                    />
-                  :
-                  <EdicaoFicha 
-                      altura={altura}
-                      peso={peso}
-                      telefone={telefone}
-                      rua={rua}
-                      numero={numero}
-                      cidade={cidade}
-                      bairro={bairro}
-                      especificacoesAdicionais={especificacoesAdicionais}
-                      isOpen={edit}
-                      onClose={() => {closeEdit()}}
-                      nome={nome}
-                      idade={idade}
-                      genero={genero}
-                    />
-                )
-              }
+              tipo === "Prontuário" ? (
+                <EdicaoProntuario
+                  altura={altura}
+                  peso={peso}
+                  telefone={telefone}
+                  rua={rua}
+                  numero={numero}
+                  cidade={cidade}
+                  bairro={bairro}
+                  especificacoesAdicionais={especificacoesAdicionais}
+                  isOpen={edit}
+                  onClose={closeEdit}
+                  nome={nome}
+                  idade={idade}
+                  genero={genero}
+                  diagnostico={diagnostico}
+                  medicacoes={medicacoes}
+                  procedimento={procedimento}
+                  resultados={resultados}
+                  doencas={doencas}
+                />
+              ) : (
+                <EdicaoFicha
+                  altura={altura}
+                  peso={peso}
+                  telefone={telefone}
+                  rua={rua}
+                  numero={numero}
+                  cidade={cidade}
+                  bairro={bairro}
+                  especificacoesAdicionais={especificacoesAdicionais}
+                  isOpen={edit}
+                  onClose={closeEdit}
+                  nome={nome}
+                  idade={idade}
+                  genero={genero}
+                />
+              )
+            )}
           </div>
         </header>
         <footer className="h-1/2 flex flex-col justify-end">

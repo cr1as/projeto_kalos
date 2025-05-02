@@ -1,103 +1,90 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
+import Link from "next/link";
 import { MdClose } from "react-icons/md";
-import { IoMdArrowDropright } from "react-icons/io";
-import { IoMdExit } from "react-icons/io";
+import { IoMdArrowDropright, IoMdExit } from "react-icons/io";
 import useAuthCookie from "@/lib/hooks/cookies";
+
 interface DrawerProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const componentes_drawer = [
-  {
-    rota: "/",
-    nome_apresetacao: "Recém Acessados"
-  },
-  {
-    rota: "/fichas",
-    nome_apresetacao: "Fichas Médicas"
-  },
-  {
-    rota: "/prontuarios",
-    nome_apresetacao: "Prontuários"
-  }
+const navItems = [
+  { href: "/", label: "Recém Acessados" },
+  { href: "/fichas", label: "Fichas Médicas" },
+  { href: "/prontuarios", label: "Prontuários" },
 ];
 
 const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose }) => {
-  const [isVisible, setIsVisible] = useState(isOpen);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const token = useAuthCookie();
-  const deslogar = () => {
-    token.removeAuthCookie();
-  }
-  useEffect(
-    () => {
-      if (isOpen) {
-        setIsVisible(true);
-        setTimeout(() => {
-          setIsAnimating(true);
-        }, 10);
-      } else {
-        setIsAnimating(false);
-        setTimeout(() => {
-          setIsVisible(false);
-        }, 300);
-      }
-    },
-    [isOpen]
-  );
+  const [visible, setVisible] = useState(isOpen);
+  const [animating, setAnimating] = useState(false);
+  const { removeAuthCookie } = useAuthCookie();
+  
+  // Sync visibility and animation
+  useEffect(() => {
+    if (isOpen) {
+      setVisible(true);
+      requestAnimationFrame(() => setAnimating(true));
+    } else {
+      setAnimating(false);
+      const timeout = setTimeout(() => setVisible(false), 300);
+      return () => clearTimeout(timeout);
+    }
+  }, [isOpen]);
+
+  const handleSignOut = useCallback(() => {
+    removeAuthCookie();
+    onClose();
+  }, [removeAuthCookie, onClose]);
+
+  if (!visible) return null;
 
   return (
-    <div className={`fixed inset-0 z-0 ${isVisible ? "block" : "hidden"}`}>
+    <div className="fixed inset-0 z-50 flex">
+      {/* Overlay */}
       <div
-        className={`fixed inset-0 bg-gradient-to-r from-gray-950 via-gray-950/50 to-transparent transition-opacity duration-300 ease-in-out ${isAnimating
-          ? "opacity-100"
-          : "opacity-0"}`}
-        aria-hidden="true"
+        className={`fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300 ${animating ? 'opacity-100' : 'opacity-0'}`}
         onClick={onClose}
+        aria-hidden="true"
       />
-      <div
-        className={`fixed left-0 top-0 flex flex-col h-full bg-[#A3D6CB] border-r-4 border-[#114238] shadow-xl transition-transform duration-300 ease-in-out w-[25rem] ${isAnimating
-          ? "translate-x-0"
-          : "-translate-x-full"}`}
-      >
-        <div className="p-4">
-          <div className="flex w-full justify-end m-2">
-            <button className="text-black" onClick={onClose}>
-              <MdClose size={40} />
-            </button>
-          </div>
-        </div>
 
-        <div className="flex flex-col">
-          <div className=" h-full flex flex-col p-4 gap-12">
-            {componentes_drawer.map(componente => {
-              return (
-                <li
-                  key={componente.nome_apresetacao}
-                  className="list-none flex items-center duration-200"
-                >
-                  <IoMdArrowDropright size={40} color="white" />
-                  <a href={componente.rota}>
-                    <p className="text-3xl">
-                      {componente.nome_apresetacao}
-                    </p>
-                  </a>
-                </li>
-              );
-            })}
-          </div>
-          
+      {/* Drawer panel */}
+      <aside
+        className={`relative bg-[#A3D6CB] w-64 max-w-full h-full shadow-xl transition-transform duration-300 ease-in-out ${animating ? 'translate-x-0' : '-translate-x-full'}`}
+        aria-label="Sidebar navigation"
+      >
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          aria-label="Fechar menu"
+          className="absolute top-4 right-4 p-2 text-black hover:text-white focus:outline-none"
+        >
+          <MdClose size={24} />
+        </button>
+
+        {/* Navigation List */}
+        <nav className="mt-16 flex flex-col space-y-4 px-6">
+          {navItems.map(({ href, label }) => (
+            <Link key={href} href={href} onClick={onClose} className="flex items-center gap-2 text-2xl text-white hover:text-gray-200">
+              <IoMdArrowDropright size={28} />
+              {label}
+            </Link>
+          ))}
+        </nav>
+
+        {/* Sign out */}
+        <div className="mt-auto mb-8 px-6">
+          <button
+            onClick={handleSignOut}
+            className="flex items-center gap-2 text-2xl text-white hover:text-gray-200 focus:outline-none"
+          >
+            <IoMdExit size={28} />
+            Sair
+          </button>
         </div>
-        <div className="h-1/2">
-          <div className="h-full flex flex-col justify-end items-center">
-            <button onClick={deslogar} className="h-14 w-32 bg--500 flex items-center justify-center gap-8">
-              <p className="text-2xl text-white">sair</p> <IoMdExit color="white" size={40}/> </button>
-          </div>
-          </div>
-      </div>
+      </aside>
     </div>
   );
 };
