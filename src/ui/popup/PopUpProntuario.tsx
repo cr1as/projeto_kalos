@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import ToggleButton from "../Togglebutton";
+
 import { MdClose } from "react-icons/md";
+import ToggleButton from "../components/Togglebutton";
 
 interface ViewProps {
   isOpen: boolean;

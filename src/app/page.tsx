@@ -2,10 +2,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import MainLayout from "@/components/layouts/MainLayout";
-import FichaRecentes from "@/components/cards/FichaRecentes";
-import { pacientes } from "@/mock/registros";
-import useAuthCookie from "@/hooks/cookies";
+import MainLayout from  "@/ui/layouts/MainLayout";
+import FichaRecentes from "@/ui/cards/FichaRecentes";
+import { pacientes } from "@/lib/mock/registros";
+import useAuthCookie from "@/lib/hooks/cookies";
 import { useRouter } from "next/navigation";
 
 const Page: React.FC = () => {

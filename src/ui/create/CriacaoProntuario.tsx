@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { MdClose } from "react-icons/md";
-import ToggleButton from "../Togglebutton";
+import ToggleButton from "../components/Togglebutton";
 
 interface CardCriacaoProps {
   isOpen: boolean;
@@ -122,11 +122,15 @@ const CardCriacao: React.FC<CardCriacaoProps> = ({ isOpen, onClose }) => {
                   <div className="flex">
                     <div className="flex w-1/2">
                       <div className="w-1/2 flex flex-col">
-                        <label className="text-xl font-normal">Medicações: </label>
+                        <label className="text-xl font-normal">
+                          Medicações:{" "}
+                        </label>
                         <input type="text" className="h-14 w-11/12" />
                       </div>
                       <div className="w-1/2 flex flex-col">
-                        <label className="text-xl font-normal">Diagnóstico: </label>
+                        <label className="text-xl font-normal">
+                          Diagnóstico:{" "}
+                        </label>
                         <input type="text" className="h-14 w-11/12" />
                       </div>
                     </div>

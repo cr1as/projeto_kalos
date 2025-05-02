@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { MdClose } from "react-icons/md";
 import { IoMdArrowDropright } from "react-icons/io";
 import { IoMdExit } from "react-icons/io";
-import useAuthCookie from "@/hooks/cookies";
+import useAuthCookie from "@/lib/hooks/cookies";
 interface DrawerProps {
   isOpen: boolean;
   onClose: () => void;
